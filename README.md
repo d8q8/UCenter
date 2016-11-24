@@ -1,37 +1,83 @@
-﻿## 简介
+﻿## 整合UCenter与ThinkPhp通信
+本次接口采用UCenter1.6.0和Thinkphp3.2.3整合双向通信
 
-ThinkPHP 是一个免费开源的，快速、简单的面向对象的 轻量级PHP开发框架 ，创立于2006年初，遵循Apache2开源协议发布，是为了敏捷WEB应用开发和简化企业应用开发而诞生的。ThinkPHP从诞生以来一直秉承简洁实用的设计原则，在保持出色的性能和至简的代码的同时，也注重易用性。并且拥有众多的原创功能和特性，在社区团队的积极参与下，在易用性、扩展性和性能方面不断优化和改进，已经成长为国内最领先和最具影响力的WEB应用开发框架，众多的典型案例确保可以稳定用于商业以及门户级的开发。
+初发点就是项目中考虑到站群式会员共用体系,为了使用一套会员体系,所以学习了一下UCenter运行原理,并进行简单的封装,简化代码逻辑,配置简单,双向通信。
 
-## 全面的WEB开发特性支持
+首先,参考文档地址如下:
 
-最新的ThinkPHP为WEB应用开发提供了强有力的支持，这些支持包括：
+社区动力DZ资料库地址 http://faq.comsenz.com/library/index.htm
 
-*  MVC支持-基于多层模型（M）、视图（V）、控制器（C）的设计模式
-*  ORM支持-提供了全功能和高性能的ORM支持，支持大部分数据库
-*  模板引擎支持-内置了高性能的基于标签库和XML标签的编译型模板引擎
-*  RESTFul支持-通过REST控制器扩展提供了RESTFul支持，为你打造全新的URL设计和访问体验
-*  云平台支持-提供了对新浪SAE平台和百度BAE平台的强力支持，具备“横跨性”和“平滑性”，支持本地化开发和调试以及部署切换，让你轻松过渡，打造全新的开发体验。
-*  CLI支持-支持基于命令行的应用开发
-*  RPC支持-提供包括PHPRpc、HProse、jsonRPC和Yar在内远程调用解决方案
-*  MongoDb支持-提供NoSQL的支持
-*  缓存支持-提供了包括文件、数据库、Memcache、Xcache、Redis等多种类型的缓存支持
+UCenter相关地址 http://faq.comsenz.com/library/UCenter/introduction/introduction_brief.htm
 
-## 大道至简的开发理念
+Thinkphp3.2.3相关手册地址 http://document.thinkphp.cn/manual_3_2.html
 
-ThinkPHP从诞生以来一直秉承大道至简的开发理念，无论从底层实现还是应用开发，我们都倡导用最少的代码完成相同的功能，正是由于对简单的执着和代码的修炼，让我们长期保持出色的性能和极速的开发体验。在主流PHP开发框架的评测数据中表现卓越，简单和快速开发是我们不变的宗旨。
+其次,参照了一些网上的整合方法,并改进了一些BUG并完善而来,大家可以自行查找
 
-## 安全性
+最后,采用模块方式整合,不影响其他模块,而且可以在其他模块中调用,统一整合方式,便于PC端和手机端同步会员账户通信体系打通.
 
-框架在系统层面提供了众多的安全特性，确保你的网站和产品安全无忧。这些特性包括：
+## 结构目录如下
 
-*  XSS安全防护
-*  表单自动验证
-*  强制数据类型转换
-*  输入数据过滤
-*  表单令牌验证
-*  防SQL注入
-*  图像上传检测
+<pre>
+Application
+├─Common                                //Common 模块
+│  ├─Common                             //Common 公用目录
+│  └─Conf                               //Common 配置目录
+│     └─config.php                      //Common 配置文件(这里可以配置cookie前缀,每个站点一个,防止冲突)
+├─Home                                  //Home 模块 (这里只做测试用,便于你自己理解)
+│  ├─Common                             //Home 公用目录
+│  ├─Conf                               //Home 配置目录
+│  ├─Cotroller                          //Home 控制器目录
+│  │  ├─BaseController.class.php        //基类控制器
+│  │  ├─EmptyController.class.php       //空控制器
+│  │  ├─IndexController.class.php       //首页类控制器
+│  │  ├─LoginController.class.php       //登录类控制器(登录逻辑在这个里面处理)
+│  │  ├─UcController.class.php          //UC类控制器(这里只写一些基础示例,个人可以自行完善)
+│  ├─Model                              //Home 模型目录
+│  └─View                               //Home 视图目录
+│     ├─Index                           //Index 控制器 视图目录
+│     ├─Login                           //Login 控制器 视图目录
+│     │  ├─index.html                   //登录首页获取cookie测试
+│     │  ├─sign_on.html                 //登录表单页(只是测试,可自己完善,如果注册需自己完善,可以借鉴这个)
+│     └─Public                          //公用视图目录
+└─UCenter                               //UCenter 模块
+   ├─Client                             //UC 客户端目录
+   │  ├─uc_client                       //UC 客户端文件
+   │  └─UcApi.class.php                 //UC 接口处理类
+   ├─Common                             //UCenter 公用目录
+   │  └─function.php                    //公用函数
+   ├─Conf                               //UCenter 配置目录
+   │  └─config.php                      //UC 配置信息文件
+   └─Controller                         //UCenter 控制器目录
+      └─ApiController.class.php         //UC 通信处理类,这个是核心类,在UCenter后台配置(可以自行写你的逻辑)
+</pre>
 
-## 商业友好的开源协议
+## 使用方法如下
 
-ThinkPHP遵循Apache2开源协议发布。Apache Licence是著名的非盈利开源组织Apache采用的协议。该协议和BSD类似，鼓励代码共享和尊重原作者的著作权，同样允许代码修改，再作为开源或商业软件发布。
+1.UCenter安装与使用
+<pre>
+UCenter下载安装与使用，这里不讲了，自行查阅官方文档，上面已经给出地址。
+</pre>
+2.UCenter后台配置
+<pre>
+1.进入UCenter用户中心后台
+2.找到左侧菜单[应用管理]
+3.点击[添加新应用]按钮
+4.进入新应用界面,[应用类型]选择[其他]
+5.[应用名称]这里可以取个好记的名字
+6.[应用的主URL]这里填写[http://域名|IP:PORT/index.php/UCenter/Api]
+7.[通信密钥]可以填写自己的密钥,不填写保存后会自动生成
+8.[是否开启同步登录/是否接受通知]选择[是]单选按钮
+9.保存成功后,返回[应用列表]后[通信情况]是红色的[通信失败]
+10.进入编辑,把UCenter后台生成的配置文件拷贝到UCenter模块的Conf目录中的config.php文件中保存即可(可参考我写的文件).
+11.再次保存后,返回应用列表会变成绿色的[通信成功]字样
+</pre>
+3.Common模块配置cookie前缀
+<pre>
+'AuthPre'=>'ucenter_' //UC登录cookie前缀,一个站点一个前缀名不要重复
+</pre>
+
+## 开源协议
+
+可以在任何项目项目(个人或商业)中使用。如有不清楚的地方可以联系我。
+
+欢迎提建议或给意见 QQ:17624522/Email:d8q8#163.com(#替换成@即可).

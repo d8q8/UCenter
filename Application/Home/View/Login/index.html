@@ -1,0 +1,15 @@
+<extend name="Public/layout" />
+
+<block name="body">
+    <div class="container">
+        <h1>用户首页</h1>
+        <p>
+            <if condition="!empty($uc_username)">
+                <span>您好,{$uc_username|default='游客'}</span>
+                <a href="{:U('login/sign_out')}">安全退出</a>
+                <else/>
+                <a href="{:U('login/sign_on')}">用户登录</a>
+            </if>
+        </p>
+    </div>
+</block>

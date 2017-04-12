@@ -183,6 +183,7 @@ class ApiController
 
         $uid = intval($get['uid']);
         $username = $get['username'];
+        // 感谢网友(小9)建议,考虑低版本
         $au = C('AuthPre');
         $authPre = !empty($au) ? $au : 'Example_';
         cookie('auth', _uc_authcode($uid . "\t" . $username, 'ENCODE'), array('prefix' => $authPre));
@@ -201,6 +202,7 @@ class ApiController
         }
 
         header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
+        // 感谢网友(小9)建议,考虑低版本
         $au = C('AuthPre');
         $authPre = !empty($au) ? $au : 'Example_';
         cookie('auth', null, array('prefix' => $authPre));

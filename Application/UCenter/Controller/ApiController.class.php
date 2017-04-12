@@ -6,6 +6,7 @@
  * Date: 2016/11/21
  * Time: 16:08
  */
+
 namespace UCenter\Controller;
 define('UC_CLIENT_PATH', dirname(dirname(__FILE__)) . '/Client/uc_client');
 
@@ -19,30 +20,31 @@ class ApiController
     const UC_CLIENT_VERSION = '1.6.0';
     const UC_CLIENT_RELEASE = '20110501';
 
-    const API_DELETEUSER           = 1; // note 用户删除 API 接口开关
-    const API_RENAMEUSER           = 1; // note 用户改名 API 接口开关
-    const API_GETTAG               = 1; // note 获取标签 API 接口开关
-    const API_SYNLOGIN             = 1; // note 同步登录 API 接口开关
-    const API_SYNLOGOUT            = 1; // note 同步登出 API 接口开关
-    const API_UPDATEPW             = 1; // note 更改用户密码 开关
-    const API_UPDATEBADWORDS       = 1; // note 更新关键字列表 开关
-    const API_UPDATEHOSTS          = 1; // note 更新域名解析缓存 开关
-    const API_UPDATEAPPS           = 1; // note 更新应用列表 开关
-    const API_UPDATECLIENT         = 1; // note 更新客户端缓存 开关
-    const API_UPDATECREDIT         = 1; // note 更新用户积分 开关
-    const API_GETCREDITSETTINGS    = 1; // note 向 UCenter 提供积分设置 开关
-    const API_GETCREDIT            = 1; // note 获取用户的某项积分 开关
+    const API_DELETEUSER = 1; // note 用户删除 API 接口开关
+    const API_RENAMEUSER = 1; // note 用户改名 API 接口开关
+    const API_GETTAG = 1; // note 获取标签 API 接口开关
+    const API_SYNLOGIN = 1; // note 同步登录 API 接口开关
+    const API_SYNLOGOUT = 1; // note 同步登出 API 接口开关
+    const API_UPDATEPW = 1; // note 更改用户密码 开关
+    const API_UPDATEBADWORDS = 1; // note 更新关键字列表 开关
+    const API_UPDATEHOSTS = 1; // note 更新域名解析缓存 开关
+    const API_UPDATEAPPS = 1; // note 更新应用列表 开关
+    const API_UPDATECLIENT = 1; // note 更新客户端缓存 开关
+    const API_UPDATECREDIT = 1; // note 更新用户积分 开关
+    const API_GETCREDITSETTINGS = 1; // note 向 UCenter 提供积分设置 开关
+    const API_GETCREDIT = 1; // note 获取用户的某项积分 开关
     const API_UPDATECREDITSETTINGS = 1; // note 更新应用积分设置 开关
-    const API_ADDFEED              = 1; // note FEED推送 开关; UCenter HOME专用，要用这个功能，请在UCENTER后台把应用类型改为UCenter HOME
+    const API_ADDFEED = 1; // note FEED推送 开关; UCenter HOME专用，要用这个功能，请在UCENTER后台把应用类型改为UCenter HOME
 
-    const API_RETURN_SUCCEED   = '1';
-    const API_RETURN_FAILED    = '-1';
+    const API_RETURN_SUCCEED = '1';
+    const API_RETURN_FAILED = '-1';
     const API_RETURN_FORBIDDEN = '-2';
 
     /**
      * 构造方法，检测相关配置
      */
-    public function __construct() {
+    public function __construct()
+    {
         if (!defined('UC_API')) {
             exit('未发现uc配置文件');
         }
@@ -53,8 +55,9 @@ class ApiController
      * 解析请求
      * @return bool
      */
-    private function initRequest() {
-        $get  = $post = array();
+    private function initRequest()
+    {
+        $get = $post = array();
         $code = @$_GET['code'];
         parse_str(_uc_authcode($code, 'DECODE', UC_KEY), $get);
 
@@ -89,7 +92,8 @@ class ApiController
      * @param $post
      * @return string
      */
-    private function test($get, $post) {
+    private function test($get, $post)
+    {
         return self::API_RETURN_SUCCEED;
     }
 
@@ -99,7 +103,8 @@ class ApiController
      * @param $post
      * @return mixed
      */
-    private function deleteuser($get, $post) {
+    private function deleteuser($get, $post)
+    {
         if (!self::API_DELETEUSER) {
             return self::API_RETURN_FORBIDDEN;
         }
@@ -115,7 +120,8 @@ class ApiController
      * @param $post
      * @return mixed
      */
-    private function renameuser($get, $post) {
+    private function renameuser($get, $post)
+    {
         if (!self::API_RENAMEUSER) {
             return self::API_RETURN_FORBIDDEN;
         }
@@ -130,7 +136,8 @@ class ApiController
      * @param $post
      * @return string
      */
-    private function updatepw($get, $post) {
+    private function updatepw($get, $post)
+    {
         if (!self::API_UPDATEPW) {
             return self::API_RETURN_FORBIDDEN;
         }
@@ -145,7 +152,8 @@ class ApiController
      * @param $post
      * @return mixed
      */
-    private function gettag($get, $post) {
+    private function gettag($get, $post)
+    {
         if (!self::API_GETTAG) {
             return self::API_RETURN_FORBIDDEN;
         }
@@ -153,7 +161,8 @@ class ApiController
         return $this->_serialize(array($get['id'], array()), 1);
     }
 
-    private function _serialize($arr, $htmlon = 0) {
+    private function _serialize($arr, $htmlon = 0)
+    {
         return xml_serialize($arr, $htmlon);
     }
 
@@ -163,7 +172,8 @@ class ApiController
      * @param $post
      * @return mixed
      */
-    private function synlogin($get, $post) {
+    private function synlogin($get, $post)
+    {
         //todo 你可以在这里直接写登陆该应用的代码，不必要用下面这种COOKIE方式
         if (!self::API_SYNLOGIN) {
             return self::API_RETURN_FORBIDDEN;
@@ -171,9 +181,10 @@ class ApiController
 
         header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
 
-        $uid      = intval($get['uid']);
+        $uid = intval($get['uid']);
         $username = $get['username'];
-        $authPre = !empty(C('AuthPre'))?C('AuthPre'):'Example_';
+        $au = C('AuthPre');
+        $authPre = !empty($au) ? $au : 'Example_';
         cookie('auth', _uc_authcode($uid . "\t" . $username, 'ENCODE'), array('prefix' => $authPre));
     }
 
@@ -183,13 +194,15 @@ class ApiController
      * @param $post
      * @return string
      */
-    private function synlogout($get, $post) {
+    private function synlogout($get, $post)
+    {
         if (!self::API_SYNLOGOUT) {
             return self::API_RETURN_FORBIDDEN;
         }
 
         header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
-        $authPre = !empty(C('AuthPre'))?C('AuthPre'):'Example_';
+        $au = C('AuthPre');
+        $authPre = !empty($au) ? $au : 'Example_';
         cookie('auth', null, array('prefix' => $authPre));
     }
 
@@ -199,7 +212,8 @@ class ApiController
      * @param $post
      * @return string
      */
-    private function updatebadwords($get, $post) {
+    private function updatebadwords($get, $post)
+    {
         if (!self::API_UPDATEBADWORDS) {
             return self::API_RETURN_FORBIDDEN;
         }
@@ -209,14 +223,14 @@ class ApiController
         $cache_file = UC_CLIENT_PATH . '/data/cache/badwords.php';
         $fp = fopen($cache_file, 'w');
         $data = array();
-        if(is_array($post)) {
-            foreach($post as $k => $v) {
+        if (is_array($post)) {
+            foreach ($post as $k => $v) {
                 $data['findpattern'][$k] = $v['findpattern'];
                 $data['replace'][$k] = $v['replacement'];
             }
         }
         $s = "<?php\r\n";
-        $s .= '$_CACHE[\'badwords\'] = '.var_export($data, TRUE).";\r\n";
+        $s .= '$_CACHE[\'badwords\'] = ' . var_export($data, TRUE) . ";\r\n";
         fwrite($fp, $s);
         fclose($fp);
 
@@ -229,7 +243,8 @@ class ApiController
      * @param $post
      * @return string
      */
-    private function updatehosts($get, $post) {
+    private function updatehosts($get, $post)
+    {
         if (!self::API_UPDATEHOSTS) {
             return self::API_RETURN_FORBIDDEN;
         }
@@ -239,7 +254,7 @@ class ApiController
         $cache_file = UC_CLIENT_PATH . '/data/cache/hosts.php';
         $fp = fopen($cache_file, 'w');
         $s = "<?php\r\n";
-        $s .= '$_CACHE[\'hosts\'] = '.var_export($post, TRUE).";\r\n";
+        $s .= '$_CACHE[\'hosts\'] = ' . var_export($post, TRUE) . ";\r\n";
         fwrite($fp, $s);
         fclose($fp);
 
@@ -252,7 +267,8 @@ class ApiController
      * @param $post
      * @return string
      */
-    private function updateapps($get, $post) {
+    private function updateapps($get, $post)
+    {
         if (!self::API_UPDATEAPPS) {
             return self::API_RETURN_FORBIDDEN;
         }
@@ -262,7 +278,7 @@ class ApiController
         $cache_file = UC_CLIENT_PATH . '/data/cache/apps.php';
         $fp = fopen($cache_file, 'w');
         $s = "<?php\r\n";
-        $s .= '$_CACHE[\'apps\'] = '.var_export($post, TRUE).";\r\n";
+        $s .= '$_CACHE[\'apps\'] = ' . var_export($post, TRUE) . ";\r\n";
         fwrite($fp, $s);
         fclose($fp);
 
@@ -275,7 +291,8 @@ class ApiController
      * @param $post
      * @return string
      */
-    private function updateclient($get, $post) {
+    private function updateclient($get, $post)
+    {
         if (!self::API_UPDATECLIENT) {
             return self::API_RETURN_FORBIDDEN;
         }
@@ -285,7 +302,7 @@ class ApiController
         $cache_file = UC_CLIENT_PATH . '/data/cache/settings.php';
         $fp = fopen($cache_file, 'w');
         $s = "<?php\r\n";
-        $s .= '$_CACHE[\'settings\'] = '.var_export($post, TRUE).";\r\n";
+        $s .= '$_CACHE[\'settings\'] = ' . var_export($post, TRUE) . ";\r\n";
         fwrite($fp, $s);
         fclose($fp);
 
@@ -298,7 +315,8 @@ class ApiController
      * @param $post
      * @return string
      */
-    private function updatecredit($get, $post) {
+    private function updatecredit($get, $post)
+    {
         if (!self::API_UPDATECREDIT) {
             return self::API_RETURN_FORBIDDEN;
         }
@@ -314,7 +332,8 @@ class ApiController
      * @param $post
      * @return mixed|string
      */
-    private function getcreditsettings($get, $post) {
+    private function getcreditsettings($get, $post)
+    {
         if (!self::API_GETCREDITSETTINGS) {
             return self::API_RETURN_FORBIDDEN;
         }
@@ -331,7 +350,8 @@ class ApiController
      * @param $post
      * @return string
      */
-    private function updatecreditsettings($get, $post) {
+    private function updatecreditsettings($get, $post)
+    {
         if (!self::API_UPDATECREDITSETTINGS) {
             return self::API_RETURN_FORBIDDEN;
         }
@@ -346,7 +366,8 @@ class ApiController
      * @param $post
      * @return string
      */
-    private function getcredit($get, $post) {
+    private function getcredit($get, $post)
+    {
         if (!self::API_GETCREDIT) {
             return self::API_RETURN_FORBIDDEN;
         }
@@ -360,7 +381,8 @@ class ApiController
      * @param $post
      * @return string
      */
-    private function addfeed($get, $post) {
+    private function addfeed($get, $post)
+    {
         if (!self::API_ADDFEED) {
             return self::API_RETURN_FORBIDDEN;
         }
